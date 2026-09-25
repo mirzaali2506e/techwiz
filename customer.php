@@ -1,0 +1,6 @@
+<?php require 'config/config.php'; require_role('customer');
+$s=db()->prepare("SELECT * FROM orders WHERE customer_id=? ORDER BY id DESC");$s->execute([user()['id']]);$orders=$s->fetchAll();
+layout_header('Customer Dashboard');?>
+<div class="d-flex justify-content-between"><div><h2>Customer Dashboard</h2><p class="text-muted">Welcome, <?=e(user()['username'])?>.</p></div><a class="btn btn-success h-50" href="products.php">Shop now</a></div>
+<div class="row g-3 mb-4"><div class="col-md-4"><div class="stat"><small>Orders</small><h3><?=count($orders)?></h3></div></div><div class="col-md-4"><div class="stat"><small>Favorites</small><h3><?=db()->query("SELECT COUNT(*) FROM favorites WHERE customer_id=".((int)user()['id']))->fetchColumn()?></h3></div></div></div>
+<h4>Order history</h4><div class="table-responsive"><table class="table"><tr><th>#</th><th>Total</th><th>Status</th><th>Pickup</th><th>Date</th></tr><?php foreach($orders as $o):?><tr><td>#<?=$o['id']?></td><td><?=money((float)$o['total_amount'])?></td><td><span class="badge bg-success"><?=e($o['order_status'])?></span></td><td><?=e($o['pickup_time'])?></td><td><?=e($o['order_date'])?></td></tr><?php endforeach;?></table></div><?php layout_footer();?>

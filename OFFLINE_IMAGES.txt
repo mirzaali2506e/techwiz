@@ -1,0 +1,14 @@
+MARKETLINK OFFLINE PRODUCT IMAGES
+================================
+All 110 product images are bundled locally under:
+assets/img/products/
+
+The website does not request product photographs from the internet.
+The database image_url field points to each local product image.
+The home-page market hero is also bundled locally as:
+assets/img/market-hero.jpg
+
+These bundled images are locally generated realistic product visuals for the demo/catalog.
+If you need legally licensed third-party photographs, replace the files with downloaded assets
+whose license permits your intended use. Pexels states its photos are free to use under its license:
+https://www.pexels.com/license/

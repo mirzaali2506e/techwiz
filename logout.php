@@ -1,0 +1,1 @@
+<?php require 'config/config.php'; session_destroy(); redirect('index.php'); ?>

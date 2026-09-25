@@ -1,0 +1,8 @@
+<?php require 'config/config.php'; require_role('admin');
+if($_SERVER['REQUEST_METHOD']==='POST'){check_csrf();$id=(int)$_POST['id'];$status=$_POST['status'];db()->prepare("UPDATE users SET status=? WHERE id=? AND role='farmer'")->execute([$status,$id]);flash('success','Farmer status updated.');redirect('admin.php');}
+$stats=['farmers'=>db()->query("SELECT COUNT(*) FROM users WHERE role='farmer'")->fetchColumn(),'customers'=>db()->query("SELECT COUNT(*) FROM users WHERE role='customer'")->fetchColumn(),'markets'=>db()->query("SELECT COUNT(*) FROM markets")->fetchColumn(),'orders'=>db()->query("SELECT COUNT(*) FROM orders")->fetchColumn()];
+$farmers=db()->query("SELECT id,username,email,status,created_at FROM users WHERE role='farmer' ORDER BY id DESC")->fetchAll();
+layout_header('Admin Dashboard');?>
+<h2>Admin Dashboard</h2><div class="row g-3 mb-4"><?php foreach($stats as $k=>$v):?><div class="col-md-3"><div class="stat"><small><?=ucfirst($k)?></small><h3><?=$v?></h3></div></div><?php endforeach;?></div>
+<div class="card p-4"><h4>Manage farmers</h4><div class="table-responsive"><table class="table"><tr><th>Farmer</th><th>Email</th><th>Status</th><th>Action</th></tr><?php foreach($farmers as $f):?><tr><td><?=e($f['username'])?></td><td><?=e($f['email'])?></td><td><?=e($f['status'])?></td><td><form method="post" class="d-flex gap-2"><?=csrf_field()?><input type="hidden" name="id" value="<?=$f['id']?>"><select name="status" class="form-select form-select-sm"><option value="active">Approve / Active</option><option value="pending">Pending</option><option value="suspended">Suspend</option></select><button class="btn btn-sm btn-success">Update</button></form></td></tr><?php endforeach;?></table></div></div>
+<?php layout_footer();?>
